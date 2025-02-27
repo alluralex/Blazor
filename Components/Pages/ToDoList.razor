@@ -1,0 +1,88 @@
+﻿@page "/cookie"
+@using System.Collections.ObjectModel
+
+@inject DB.BlazorKbContext db;
+
+<h3>ToDoList</h3>
+<div class="container">
+	<div class="row">
+		<b class="m-3"> ЗАДАЧИ</b>
+		<button @onclick="(() => ChangeList(1))" class="bg-body text-white">ВСЕ ЗАДАНИЯ</button>
+		<button @onclick="(() => ChangeList(2))" class="bg-success text-white">ВЫПОЛНЕННЫЕ</button>
+		<button @onclick="(() => ChangeList(3))" class="bg-danger text-white">НЕВЫПОЛНЕННЫЕ</button>
+	</div>
+	<div class="row flex-nowrap overflow-auto">
+		@if (tasks.Count > 0)
+		{
+			@foreach (var task in tasks)
+			{
+				<div class="col-3">
+
+					<div class="row">
+						<button class=@task.ColorBox style="width:300px" @onclick="(()=>ChangeTask(task))">
+							<b>@task.Title</b>
+						</button>
+						<button style="width:50px; height:50px" @onclick="(()=>DeleteTask(task))">
+							<img style="width: 1.7em;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxcqfJ5q4oHVriChPKDW71cXni9ua8Al5KsA&s" />
+						</button>
+						<button style="width:50px; height:50px">
+							<img style="width: 1.7em" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbd9Ej6yfTti4RWD83xGTIW7mf8LHKXSITFQ&s" />
+						</button>
+					</div>
+				</div>
+			}
+		}
+		else
+		{
+			<p>Задачи не найдены.</p>
+		}
+	</div>
+	<div>
+	</div>
+</div>
+
+@code {
+	List<DB.Task> tasks = new();
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		tasks = db.Tasks.ToList();
+	}
+	void ChangeTask(DB.Task task)
+	{
+		task.IsCompleted = !task.IsCompleted;
+		if (task.IsCompleted)
+		{
+			task.ColorBox = "col-sm-2 bg-success m-3 text-light";
+		}
+		else
+		{
+			task.ColorBox = "col-sm-2 bg-danger m-3 text-light";
+		}
+		db.SaveChanges();
+	}
+	void ChangeList(int button)
+	{
+		switch (button)
+		{
+			case 1:
+				tasks = db.Tasks.ToList();
+				return;
+
+			case 2:
+				tasks = db.Tasks.Where(s => s.IsCompleted == true).ToList();
+				return;
+			case 3:
+				tasks = db.Tasks.Where(s => s.IsCompleted == false).ToList();
+				return;
+		}
+	}
+
+	void DeleteTask(DB.Task SelectedTask)
+	{
+		tasks.Remove(SelectedTask);
+		db.Tasks.Remove(SelectedTask);
+		db.SaveChanges();
+	}
+}
