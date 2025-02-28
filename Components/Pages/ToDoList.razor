@@ -53,7 +53,7 @@
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ЗАКРЫТЬ</button>
-										<button type="button" class="btn btn-primary">СОХРАНИТЬ</button>
+										<button type="button" @onclick="(()=>ChangeNameTask(task, task.Title))" class="btn btn-primary">СОХРАНИТЬ</button>
 									</div>
 								</div>
 							</div>
@@ -73,6 +73,7 @@
 @code {
 	string value;
 	List<DB.Task> tasks = new();
+
 
 	protected override void OnInitialized()
 	{
@@ -128,10 +129,10 @@
 		db.SaveChanges();
 	}
 
-	void ChangeNameTask(DB.Task SelectedTask)
+	void ChangeNameTask(DB.Task SelectedTask, string newText)
 	{
-		//DB.Task task = SelectedTask
-
-		
+		DB.Task task = SelectedTask;
+		task.Title = newText;
+		db.SaveChanges();
 	}
 }
