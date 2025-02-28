@@ -14,6 +14,8 @@ public partial class BlazorKbContext : DbContext
     public BlazorKbContext(DbContextOptions<BlazorKbContext> options)
         : base(options)
     {
+        Database.EnsureCreated();
+
     }
 
     public virtual DbSet<Task> Tasks { get; set; }
