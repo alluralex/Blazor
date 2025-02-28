@@ -21,7 +21,7 @@ public partial class BlazorKbContext : DbContext
     public virtual DbSet<Task> Tasks { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=192.168.200.13;userid=student;password=student;database=BlazorKB", ServerVersion.Parse("10.3.39-mariadb"));
+        => optionsBuilder.UseMySql("server=localhost;userid=SuperKAD;password=1234;database=BlazorKB", ServerVersion.Parse("10.3.39-mariadb"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
